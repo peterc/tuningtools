@@ -1,0 +1,46 @@
+Modelfile:
+```
+FROM ./Qwen2.5-1.5B-CodeExplain.gguf
+TEMPLATE """
+<|im_start|>system
+
+Respond in the following format:
+
+<explanation>
+...
+</explanation>
+<code>
+...
+</code>
+<|im_end|>
+{{- range .Messages }}
+<|im_start|>{{ .Role }}
+{{ .Content }}<|im_end|>
+{{- end }}
+<|im_start|>assistant
+"""
+```
+
+
+```
+git clone https://github.com/ggerganov/llama.cpp.git
+pip install -r llama.cpp/requirements.txt
+python llama.cpp/convert_hf_to_gguf.py --outfile Qwen2.5-1.5B-CodeExplain.gguf --outtype q8_0 finetuned_model
+ollama create qwen-codeexplain -f Modelfile
+
+```
+
+
+
+```
+{{- range .Messages }}
+{{- if eq .Role "user" }}### Instruction:
+{{ .Content }}
+### Response:
+{{ end }}
+{{- if eq .Role "assistant" }}{{ .Content }}</s>{{ end }}
+{{- if eq .Role "system" }}### System:
+{{ .Content }}
+{{ end }}
+{{- end }}
+```

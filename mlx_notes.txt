@@ -1,0 +1,37 @@
+https://www.philschmid.de/fine-tune-llms-in-2025
+
+### The Simple Way
+https://github.com/ml-explore/mlx-examples/blob/main/lora/README.md
+
+/Users/peter/Scratchpad/mlx/mlx-examples/lora
+python convert.py --hf-path mistralai/Mistral-7B-Instruct-v0.2 -q
+
+task :train do
+  iters = ENV['iters'] || 100
+  sh "python lora.py --train --model mistralai/Mistral-7B-Instruct-v0.2 --data . --batch-size 4 --lora-layers 16 --iters #{iters}"
+end
+
+task :prompt do
+  prompt = ENV['prompt']
+  sh "python lora.py --model mlx_model -m 1000 --prompt '#{prompt}'"
+end
+
+### The Complex/Better Way
+
+cd /Users/peter/Scratchpad/mlx/mlx-examples
+python -m mlx_lm.generate --model mistralai/Mistral-7B-Instruct-v0.2 --max-tokens 1000 --prompt "Tell me a joke"
+
+task :train do
+  iters = ENV['iters'] || 100
+  sh "python -m mlx_lm.lora --train --model mistralai/Mistral-7B-Instruct-v0.2 --fine-tune-type lora --num-layers 16 --batch-size 4 --data data --iters #{iters} --adapter-path adapter"
+end
+
+task :promptclean do
+  prompt = ENV['prompt'] || "Tell me a joke."
+  sh "python -m mlx_lm.generate --model mistralai/Mistral-7B-Instruct-v0.2 --max-tokens 1000 --prompt '#{prompt}'"
+end
+
+task :prompt do
+  prompt = ENV['prompt'] || "Tell me a joke."
+  sh "python -m mlx_lm.generate --model mistralai/Mistral-7B-Instruct-v0.2 --max-tokens 1000 --prompt '#{prompt}' --adapter-path adapter"
+end

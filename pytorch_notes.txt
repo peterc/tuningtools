@@ -1,0 +1,14 @@
+the gist where it all began:
+https://gist.github.com/willccbb/4676755236bb08cab5f4e54a0475d6fb
+
+other useful stuff:
+https://github.com/Mohammadjafari80/GSM8K-RLVR/blob/main/train.py
+
+runpod, latest torch image
+
+```bash
+apt update -y
+apt install -y nano screen git
+#pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+pip install git+https://github.com/huggingface/trl.git accelerate transformers datasets peft wandb tqdm ninja flash-attn
+```
