@@ -11,6 +11,10 @@ Respond in the following format:
 </code>
 """
 
+SYSTEM_PROMPT = """
+You are a thinking agent. Think about the query in <think></think> tags before answering.
+"""
+
 def do_inference(model, tokenizer, prompt):
     logging.set_verbosity_error()
 
@@ -43,7 +47,7 @@ prompts = [
 ]
 
 #models = ['Qwen/Qwen2.5-1.5B-Instruct', 'finetuned_model']
-models = ['finetuned_model', 'rewarded_model']
+models = ['finetuned_model'] #, 'rewarded_model']
 
 for model_name in models:
   model = AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True).to("cuda")
