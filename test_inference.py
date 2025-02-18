@@ -11,10 +11,8 @@ Respond in the following format:
 </code>
 """
 
-def do_inference(model_name, prompt):
+def do_inference(model, tokenizer, prompt):
     logging.set_verbosity_error()
-    model = AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True).to("cuda")
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
 
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
@@ -47,13 +45,16 @@ prompts = [
 #models = ['Qwen/Qwen2.5-1.5B-Instruct', 'finetuned_model']
 models = ['finetuned_model', 'rewarded_model']
 
-for model in models:
+for model_name in models:
+  model = AutoModelForCausalLM.from_pretrained(model_name, trust_remote_code=True).to("cuda")
+  tokenizer = AutoTokenizer.from_pretrained(model_name)
+
   print("----------------------------------")
-  print("  " + model)
+  print("  " + model_name)
   print("----------------------------------")
   for prompt in prompts:
     print("")
     print(">>> " + prompt)
     print("")
-    print(do_inference(model, prompt))
+    print(do_inference(model, tokenizer, prompt))
     print("")

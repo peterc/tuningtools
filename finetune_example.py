@@ -1,10 +1,13 @@
 from datasets import Dataset
 from transformers import AutoTokenizer, AutoModelForCausalLM, Trainer, TrainingArguments
 import shutil
+import os
 
 model_name = "Qwen/Qwen2.5-1.5B-Instruct"
 output_dir="./finetuned_model"
-shutil.rmtree(output_dir)
+
+if os.path.exists(output_dir):
+    shutil.rmtree(output_dir)
 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 tokenizer.pad_token = tokenizer.eos_token
